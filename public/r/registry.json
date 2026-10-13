@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "capigo-ui",
+  "homepage": "https://github.com/vtech-com/capigo-ui",
+  "items": [
+    {
+      "name": "status-split-pill",
+      "type": "registry:component",
+      "title": "Status Split Pill",
+      "description": "A lifecycle status control: the current status as a dot and label, a menu of allowed transitions, and a chevron that takes the happy-path transition. Ships a read-only badge and a single-transition button.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "alert-dialog",
+        "badge",
+        "button",
+        "button-group",
+        "dropdown-menu",
+        "tooltip"
+      ],
+      "files": [
+        {
+          "path": "src/status-split-pill/status-split-pill.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}

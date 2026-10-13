@@ -1,6 +1,8 @@
 node_modules/
 .DS_Store
-# The one devDependency is pinned exactly, so no lockfile is kept.
+# Every devDependency is pinned exactly, so no lockfile is kept.
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+dist/
+coverage/

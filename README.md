@@ -9,16 +9,19 @@ usable in any shadcn app. MIT licensed.
 
 ## Install
 
-From GitHub:
+Pin a release tag. `#ref` takes a tag, a branch or a full commit SHA; prefer a tag:
 
 ```bash
-npx shadcn@latest add vtech-com/capigo-ui/status-split-pill
+npx shadcn@latest add vtech-com/capigo-ui/status-split-pill#v0.1.0
 ```
 
-By the built file's URL:
+Without `#ref` the CLI installs whatever is on the default branch, which can change under you.
+A GitHub address reads the root `registry.json` and the source files at that ref.
+
+By the built file's URL, pinned to the same tag:
 
 ```bash
-npx shadcn@latest add https://raw.githubusercontent.com/vtech-com/capigo-ui/main/public/r/status-split-pill.json
+npx shadcn@latest add https://raw.githubusercontent.com/vtech-com/capigo-ui/v0.1.0/public/r/status-split-pill.json
 ```
 
 From a local checkout:
@@ -29,24 +32,42 @@ npx shadcn@latest add ./capigo-ui/public/r/status-split-pill.json
 
 The item lands in your `components` alias as `status-split-pill.tsx`. It installs the shadcn
 primitives it composes: `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu` and
-`tooltip`, plus `lucide-react`.
+`tooltip`, plus `lucide-react`. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Develop
 
 ```bash
 npm install
-npm run build
+npm run build          # shadcn build: writes public/r/
+npm run typecheck
+npm run lint
+npm test
+npm run check:build    # fails when public/r/ is stale
+npm run check:schema   # validates the registry JSON against ui.shadcn.com/schema
+npm run smoke          # installs the item into a fresh shadcn Vite app and builds it (needs network)
 ```
 
-`build` runs `shadcn build`, which writes `public/r/`. Commit the build with the source change.
+Commit the build with the source change. CI runs every check above on each pull request and on
+`main`.
 
 The shadcn CLI is pinned to one exact version (`4.21.0`) because two versions can build different
-JSON. With one exact devDependency, the repo keeps no lockfile; `.gitignore` excludes them.
+JSON. Every other devDependency is pinned exactly too, so the repo keeps no lockfile; `.gitignore`
+excludes them.
 
-The source is `src/status-split-pill/status-split-pill.tsx`. It imports only the shadcn paths
-`@/components/ui/*` and `@/lib/utils`, so `shadcn add` rewrites them to the consumer's aliases.
-It carries no product copy, no i18n, no toasts and no server calls: labels, colours,
-transitions and handlers are all props.
+The source is `src/status-split-pill/status-split-pill.tsx`, its tests are in
+`src/status-split-pill/__tests__/`. It imports only the shadcn paths `@/components/ui/*` and
+`@/lib/utils`, so `shadcn add` rewrites them to the consumer's aliases. It carries no product
+copy, no i18n, no toasts and no server calls: labels, colours, transitions and handlers are all
+props.
+
+`src/components/ui/` and `src/lib/utils.ts` are dev-only: the upstream `radix-nova` primitives,
+installed with `shadcn add` so the item typechecks and tests here. They are not part of any item.
+
+## Contributing
+
+Read [AGENTS.md](AGENTS.md) first. It is binding for people and agents alike: what an item may
+import, what every change ships (a test, a rebuilt `public/r/`, a README update and a changelog
+entry), and how versions are bumped.
 
 ## Vendored into Capigo
 

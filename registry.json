@@ -23,6 +23,18 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "progress-circle",
+      "type": "registry:component",
+      "title": "Progress Circle",
+      "description": "A small ring that shows a percentage, for a card or a table cell where a bar would not fit. A progressbar with an optional value label and class slots for the ring.",
+      "files": [
+        {
+          "path": "src/progress-circle/progress-circle.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

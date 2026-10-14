@@ -10,6 +10,7 @@ export default defineConfig({
     // The specific entry first: the item's own path in a consumer app, as the demo imports it.
     alias: [
       { find: /^@\/components\/status-split-pill$/, replacement: src("status-split-pill/status-split-pill.tsx") },
+      { find: /^@\/components\/progress-circle$/, replacement: src("progress-circle/progress-circle.tsx") },
       { find: /^@\//, replacement: src("") },
     ],
   },

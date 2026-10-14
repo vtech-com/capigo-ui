@@ -6,13 +6,14 @@ usable in any shadcn app. MIT licensed.
 | Item | What it is |
 |---|---|
 | `status-split-pill` | A lifecycle status control: the current status as a dot and label, a menu of allowed transitions, and a chevron that takes the happy-path transition. |
+| `progress-circle` | A small ring that shows a percentage, for a card or a table cell where a bar would not fit. |
 
 ## Install
 
 Pin a release tag. `#ref` takes a tag, a branch or a full commit SHA; prefer a tag:
 
 ```bash
-npx shadcn@latest add vtech-com/capigo-ui/status-split-pill#v0.1.0
+npx shadcn@latest add vtech-com/capigo-ui/status-split-pill#v0.2.0
 ```
 
 Without `#ref` the CLI installs whatever is on the default branch, which can change under you.
@@ -21,7 +22,7 @@ A GitHub address reads the root `registry.json` and the source files at that ref
 By the built file's URL, pinned to the same tag:
 
 ```bash
-npx shadcn@latest add https://raw.githubusercontent.com/vtech-com/capigo-ui/v0.1.0/public/r/status-split-pill.json
+npx shadcn@latest add https://raw.githubusercontent.com/vtech-com/capigo-ui/v0.2.0/public/r/status-split-pill.json
 ```
 
 From a local checkout:
@@ -30,9 +31,9 @@ From a local checkout:
 npx shadcn@latest add ./capigo-ui/public/r/status-split-pill.json
 ```
 
-The item lands in your `components` alias as `status-split-pill.tsx`. It installs the shadcn
-primitives it composes: `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu` and
-`tooltip`, plus `lucide-react`. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
+Each item lands in your `components` alias as `<item>.tsx`. `status-split-pill` installs the
+shadcn primitives it composes: `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu`
+and `tooltip`, plus `lucide-react`. `progress-circle` needs nothing beyond `cn`. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Develop
 
@@ -44,7 +45,7 @@ npm run lint
 npm test
 npm run check:build    # fails when public/r/ is stale
 npm run check:schema   # validates the registry JSON against ui.shadcn.com/schema
-npm run smoke          # installs the item into a fresh shadcn Vite app and builds it (needs network)
+npm run smoke          # installs every item into a fresh shadcn Vite app and builds it (needs network)
 ```
 
 Commit the build with the source change. CI runs every check above on each pull request and on
@@ -54,8 +55,8 @@ The shadcn CLI is pinned to one exact version (`4.21.0`) because two versions ca
 JSON. Every other devDependency is pinned exactly too, so the repo keeps no lockfile; `.gitignore`
 excludes them.
 
-The source is `src/status-split-pill/status-split-pill.tsx`, its tests are in
-`src/status-split-pill/__tests__/`. It imports only the shadcn paths `@/components/ui/*` and
+Each item's source is `src/<item>/<item>.tsx`, with its demo beside it and its tests in
+`src/<item>/__tests__/`. An item imports only the shadcn paths `@/components/ui/*` and
 `@/lib/utils`, so `shadcn add` rewrites them to the consumer's aliases. It carries no product
 copy, no i18n, no toasts and no server calls: labels, colours, transitions and handlers are all
 props.
@@ -173,6 +174,31 @@ Every other prop goes to the root element (the group, or the span).
 
 `src/status-split-pill/status-split-pill-demo.tsx` renders both looks on one lifecycle. Copy it
 into an app that has the item installed.
+
+## `progress-circle`
+
+A `role="progressbar"` ring. Name it with `aria-label`: the ring is hidden from assistive
+technology, and the value label is decoration.
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `value` | `number` | — | A percentage. Clamped to 0–100 and rounded; a non-finite value reads as 0. |
+| `size` | `"sm" \| "default" \| "lg"` | `"default"` | 14, 18 or 24 px, with `text-xs`, `text-sm` or `text-base`. |
+| `showValue` | `boolean` | `false` | Shows `NN%` after the ring. |
+| `classNames` | slot map | — | `svg`, `track`, `indicator`, `value`. The ring defaults to `stroke-primary` on `stroke-primary/20`. |
+
+Every other prop, `className` included, goes to the root `span`.
+
+```tsx
+<ProgressCircle
+  value={40}
+  showValue
+  aria-label="Board progress"
+  classNames={{ track: "stroke-destructive/20", indicator: "stroke-destructive" }}
+/>
+```
+
+`src/progress-circle/progress-circle-demo.tsx` renders the sizes and a recoloured ring.
 
 ## License
 

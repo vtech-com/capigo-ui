@@ -6,6 +6,14 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-14
+
+### Added
+
+- `progress-circle`: a small percentage ring, a `role="progressbar"` with sizes `sm`, `default`
+  and `lg`, an optional value label, and class slots `svg`, `track`, `indicator` and `value`. A
+  non-finite value reads as 0.
+
 ## [0.1.0] - 2026-10-13
 
 ### Added
@@ -17,5 +25,6 @@ All notable changes to this registry are recorded here. The format follows
   status. Composes `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu` and
   `tooltip`, plus `lucide-react`.
 
-[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/vtech-com/capigo-ui/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/vtech-com/capigo-ui/releases/tag/v0.1.0

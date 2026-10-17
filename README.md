@@ -7,6 +7,7 @@ usable in any shadcn app. MIT licensed.
 |---|---|
 | `status-split-pill` | A lifecycle status control: the current status as a dot and label, a menu of allowed transitions, and a chevron that takes the happy-path transition. |
 | `progress-circle` | A small ring that shows a percentage, for a card or a table cell where a bar would not fit. |
+| `confirmation-dialog` | A confirmation dialog, simple or type-to-confirm, with its buttons on one row at every width. |
 
 ## Install
 
@@ -33,7 +34,7 @@ npx shadcn@latest add ./capigo-ui/public/r/status-split-pill.json
 
 Each item lands in your `components` alias as `<item>.tsx`. `status-split-pill` installs the
 shadcn primitives it composes: `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu`
-and `tooltip`, plus `lucide-react`. `progress-circle` needs nothing beyond `cn`. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
+and `tooltip`, plus `lucide-react`. `progress-circle` needs nothing beyond `cn`. `confirmation-dialog` installs `alert-dialog`, `button`, `input` and `label`, plus `lucide-react`. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Develop
 
@@ -199,6 +200,46 @@ Every other prop, `className` included, goes to the root `span`.
 ```
 
 `src/progress-circle/progress-circle-demo.tsx` renders the sizes and a recoloured ring.
+
+## `confirmation-dialog`
+
+One export, `ConfirmationDialog`, built on `AlertDialog`. Shadcn's footer stacks its buttons in a
+column below `sm` with the primary action on top; here the footer stays on one row at every
+width, right-aligned, confirm last, buttons at natural width. Typed mode puts the Esc hint on
+the left of the same row.
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `open`, `onOpenChange` | `boolean`, `(open) => void` | — | Controlled state. |
+| `message` | `ReactNode` | — | The body text. |
+| `mode` | `"typed" \| "simple"` | `"typed"` | `"typed"` asks the user to type `confirmText` before confirm enables. |
+| `confirmText` | `string` | `""` | The phrase to type. Required in typed mode. |
+| `onConfirm` | `() => void \| boolean \| Promise<void \| boolean>` | — | Return `false` or throw to keep the dialog open; otherwise it closes. |
+| `confirmVariant` | `"default" \| "destructive"` | `"destructive"` typed, `"default"` simple | The confirm button look. |
+| `busy` | `boolean` | `false` | External pending state: disables both buttons. |
+| `confirmDisabled` | `boolean` | `false` | Disables confirm only. |
+| `children` | `ReactNode` | — | Extra content between the message and the input. |
+| `contentTestId`, `confirmTestId`, `testIdPrefix` | `string` | `"confirmation-dialog"`, `"confirm-button"`, none | `data-testid`s; the prefix adds `<prefix>-cancel`. |
+| `title`, `confirmButtonText`, `cancelButtonText` | `string` | `"Delete"`, `"Confirm"`, `"Cancel"` | Labels. |
+| `irreversibleWarningText` | `string` | typed: `"This action cannot be undone."`; simple: none | Warning line. |
+| `typeToConfirmPrefixText`, `typeToConfirmSuffixText` | `string` | `"Type"`, `"to confirm."` | Text around the phrase. |
+| `copyConfirmTextAriaLabel`, `copiedAriaLabel` | `string` | `"Copy confirmation text"`, `"Copied"` | Copy button names. |
+| `inputLabel`, `inputAriaLabel` | `string` | `"Type confirmation text"` | The input's label. |
+| `escHintText` | `string` | `"Press ESC to cancel."` | Typed-mode hint. |
+
+All text defaults are English; pass translated strings.
+
+```tsx
+<ConfirmationDialog
+  open={open}
+  onOpenChange={setOpen}
+  mode="simple"
+  message="Archive this board?"
+  onConfirm={archive}
+/>
+```
+
+`src/confirmation-dialog/confirmation-dialog-demo.tsx` renders both modes.
 
 ## License
 

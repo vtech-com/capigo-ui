@@ -6,6 +6,15 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `confirmation-dialog`: `ConfirmationDialog`, a complete confirmation dialog on `AlertDialog`.
+  `mode="simple"` is a yes/no; `mode="typed"` makes the user type a phrase, with a copy button.
+  `onConfirm` may be async and return `false` to stay open; `busy`, `confirmDisabled`,
+  `confirmVariant`, `children` and test-id props are supported, and every label is a prop. The
+  footer keeps its buttons on one row at every width, right-aligned, confirm last. Composes
+  `alert-dialog`, `button`, `input` and `label`, plus `lucide-react`.
+
 ## [0.2.0] - 2026-10-14
 
 ### Added

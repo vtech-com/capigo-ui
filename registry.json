@@ -8,7 +8,9 @@
       "type": "registry:component",
       "title": "Status Split Pill",
       "description": "A lifecycle status control: the current status as a dot and label, a menu of allowed transitions, and a chevron that takes the happy-path transition. Ships a read-only badge and a single-transition button.",
-      "dependencies": ["lucide-react"],
+      "dependencies": [
+        "lucide-react"
+      ],
       "registryDependencies": [
         "alert-dialog",
         "badge",
@@ -34,6 +36,27 @@
           "path": "src/progress-circle/progress-circle.tsx",
           "type": "registry:component"
         }
+      ]
+    },
+    {
+      "name": "confirmation-dialog",
+      "type": "registry:component",
+      "title": "Confirmation Dialog",
+      "description": "A complete confirmation dialog on AlertDialog: a simple yes/no or a typed mode that asks for a phrase first. The footer keeps its buttons on one row at every width, confirm last.",
+      "registryDependencies": [
+        "alert-dialog",
+        "button",
+        "input",
+        "label"
+      ],
+      "files": [
+        {
+          "path": "src/confirmation-dialog/confirmation-dialog.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "lucide-react"
       ]
     }
   ]

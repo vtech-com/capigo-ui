@@ -1,3 +1,5 @@
+"use client"
+
 /**
  * A complete confirmation dialog on AlertDialog: a "simple" yes/no, or a
  * "typed" mode where the user must type a phrase first. The footer stays on

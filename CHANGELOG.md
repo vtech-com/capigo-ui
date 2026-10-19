@@ -6,6 +6,15 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `copy-button`: `CopyButton`, a button that copies a value with the Clipboard API or a textarea
+  fallback, shows a copied icon, name and `data-copied` for two seconds, and fires a short burst of
+  dots with an optional `burstLabel`. The burst is skipped under reduced motion or with
+  `burst={false}`. `label`, `copiedLabel`, `onCopied`, `onCopyError`, tooltip labels and icons are
+  props. `CopyableCode` shows a code, as any element, with that button beside it, revealed on hover
+  or focus. Composes `button` and `tooltip`, plus `lucide-react`.
+
 ## [0.3.0] - 2026-10-17
 
 ### Added

@@ -12,6 +12,7 @@ export default defineConfig({
       { find: /^@\/components\/status-split-pill$/, replacement: src("status-split-pill/status-split-pill.tsx") },
       { find: /^@\/components\/progress-circle$/, replacement: src("progress-circle/progress-circle.tsx") },
       { find: /^@\/components\/confirmation-dialog$/, replacement: src("confirmation-dialog/confirmation-dialog.tsx") },
+      { find: /^@\/components\/copy-button$/, replacement: src("copy-button/copy-button.tsx") },
       { find: /^@\//, replacement: src("") },
     ],
   },

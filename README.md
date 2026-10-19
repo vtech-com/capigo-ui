@@ -8,6 +8,7 @@ usable in any shadcn app. MIT licensed.
 | `status-split-pill` | A lifecycle status control: the current status as a dot and label, a menu of allowed transitions, and a chevron that takes the happy-path transition. |
 | `progress-circle` | A small ring that shows a percentage, for a card or a table cell where a bar would not fit. |
 | `confirmation-dialog` | A confirmation dialog, simple or type-to-confirm, with its buttons on one row at every width. |
+| `copy-button` | A button that copies a value with a short burst, and `CopyableCode`: a code with that button beside it. |
 
 ## Install
 
@@ -34,7 +35,7 @@ npx shadcn@latest add ./capigo-ui/public/r/status-split-pill.json
 
 Each item lands in your `components` alias as `<item>.tsx`. `status-split-pill` installs the
 shadcn primitives it composes: `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu`
-and `tooltip`, plus `lucide-react`. `progress-circle` needs nothing beyond `cn`. `confirmation-dialog` installs `alert-dialog`, `button`, `input` and `label`, plus `lucide-react`. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
+and `tooltip`, plus `lucide-react`. `progress-circle` needs nothing beyond `cn`. `confirmation-dialog` installs `alert-dialog`, `button`, `input` and `label`, plus `lucide-react`. `copy-button` installs `button` and `tooltip`, plus `lucide-react`. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Develop
 
@@ -240,6 +241,67 @@ All text defaults are English; pass translated strings.
 ```
 
 `src/confirmation-dialog/confirmation-dialog-demo.tsx` renders both modes.
+
+## `copy-button`
+
+Two exports in one file: `CopyButton`, and `CopyableCode`, a code with a `CopyButton` beside it.
+
+### `CopyButton` props
+
+A click copies `value` with the Clipboard API, or, outside a secure context, through a hidden
+textarea mounted beside the button so a focus trap such as a dialog keeps the selection. The button
+then shows the copied icon and name, sets `data-copied="true"` for two seconds, and fires a burst:
+dots in `--primary` and an optional tilted label, about one second long. The burst is absolutely
+positioned, `pointer-events-none` and `aria-hidden`, so it neither moves the layout nor blocks the
+next click. It is skipped under `prefers-reduced-motion: reduce`.
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `value` | `string` | — | The text to copy. |
+| `label`, `copiedLabel` | `string` | `"Copy"`, `"Copied"` | The accessible name, idle and for two seconds after a copy. An `aria-label` prop overrides both. |
+| `burstLabel` | `ReactNode` | none | Text tilted above the button during the burst. Omit for dots only. |
+| `burst` | `boolean` | `true` | `false` turns the burst off. |
+| `onCopied` | `() => void` | — | Runs once after a successful copy. |
+| `onCopyError` | `(error: unknown) => void` | `console.error` | Runs when the copy fails; the button stays idle. Show a toast here. |
+| `onClick` | click handler | — | Runs first. Calling `event.preventDefault()` cancels the copy. |
+| `tooltipLabel`, `copiedTooltipLabel` | `ReactNode` | none | Setting either wraps the button in a tooltip; each falls back to the other. |
+| `icon`, `copiedIcon` | `ReactNode` | `Copy`, `Check` | The idle and copied icons. |
+| `size`, `variant` | button size and variant | `"icon"`, `"ghost"` | The button look. |
+
+Every other prop, `className` and `data-testid` included, goes to the button.
+
+```tsx
+<CopyButton
+  value={order.code}
+  label={t("copy")}
+  copiedLabel={t("copied")}
+  burstLabel={t("copiedBurst")}
+  onCopyError={() => toast.error(t("copyFailed"))}
+/>
+```
+
+### `CopyableCode` props
+
+The button stays hidden until the code is hovered or holds focus, stays visible while it shows the
+copied state, and is always visible on a screen that cannot hover. The code truncates and uses
+tabular numbers.
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `code` | `string` | — | The code shown and copied. |
+| `as` | element type | `"span"` | The element holding the code, such as `"h1"` for a page title. Anything but a span gets a `div` wrapper. |
+| `className` | `string` | — | On the wrapper; text styles reach the code. |
+| `data-testid` | `string` | — | On the code element. The button gets `<id>-copy`. |
+| `label`, `copiedLabel`, `burstLabel`, `burst`, `onCopied`, `onCopyError`, `tooltipLabel`, `copiedTooltipLabel`, `icon`, `copiedIcon` | as `CopyButton` | as `CopyButton`, icons at `size-3.5` | Forwarded to the button. |
+
+All text defaults are English; pass translated strings.
+
+```tsx
+<CopyableCode code={plan.code} as="h1" className="text-xl font-semibold" data-testid="plan-code" />
+```
+
+`src/copy-button/copy-button-demo.tsx` renders a plain button, one with a tooltip, and a code as a
+page title.
 
 ## License
 

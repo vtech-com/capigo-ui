@@ -58,6 +58,25 @@
       "dependencies": [
         "lucide-react"
       ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:component",
+      "title": "Copy Button",
+      "description": "A button that copies a value, with a two-second copied state and a short burst of dots and an optional label. Ships CopyableCode: a code with that button beside it, shown on hover or focus.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button",
+        "tooltip"
+      ],
+      "files": [
+        {
+          "path": "src/copy-button/copy-button.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

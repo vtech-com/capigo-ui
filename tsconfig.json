@@ -18,6 +18,7 @@
       "@/components/status-split-pill": ["./src/status-split-pill/status-split-pill.tsx"],
       "@/components/progress-circle": ["./src/progress-circle/progress-circle.tsx"],
       "@/components/confirmation-dialog": ["./src/confirmation-dialog/confirmation-dialog.tsx"],
+      "@/components/copy-button": ["./src/copy-button/copy-button.tsx"],
       "@/*": ["./src/*"]
     }
   },

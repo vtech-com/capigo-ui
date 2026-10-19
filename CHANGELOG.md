@@ -6,6 +6,8 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-19
+
 ### Added
 
 - `copy-button`: `CopyButton`, a button that copies a value with the Clipboard API or a textarea
@@ -45,7 +47,8 @@ All notable changes to this registry are recorded here. The format follows
   status. Composes `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu` and
   `tooltip`, plus `lucide-react`.
 
-[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/vtech-com/capigo-ui/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/vtech-com/capigo-ui/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/vtech-com/capigo-ui/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/vtech-com/capigo-ui/releases/tag/v0.1.0

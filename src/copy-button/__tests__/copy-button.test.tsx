@@ -43,6 +43,9 @@ describe("CopyButton", () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
+    // Drop the per-test stub so jsdom's own execCommand shows through again.
+    Reflect.deleteProperty(document, "execCommand")
+    vi.unstubAllGlobals()
   })
 
   it("copies the value, reports it once and shows the copied state", async () => {
@@ -69,6 +72,39 @@ describe("CopyButton", () => {
     expect(screen.getByRole("button")).toHaveAccessibleName("Copy the code")
   })
 
+  it("keeps an aria-label prop in the copied state", async () => {
+    render(<CopyButton value="x" aria-label="Copy the code" />)
+    const button = screen.getByRole("button", { name: "Copy the code" })
+    fireEvent.click(button)
+    await waitFor(() => expect(button).toHaveAttribute("data-copied", "true"))
+    expect(button).toHaveAccessibleName("Copy the code")
+  })
+
+  it("swaps the copy icon for a check after a copy", async () => {
+    render(<CopyButton value="x" />)
+    const button = screen.getByRole("button")
+    expect(button.querySelector("svg.lucide-copy")).not.toBeNull()
+    expect(button.querySelector("svg.lucide-check")).toBeNull()
+    fireEvent.click(button)
+    await waitFor(() => expect(button.querySelector("svg.lucide-check")).not.toBeNull())
+    expect(button.querySelector("svg.lucide-copy")).toBeNull()
+  })
+
+  it("swaps custom icons after a copy", async () => {
+    render(<CopyButton value="x" icon={<i data-testid="idle" />} copiedIcon={<i data-testid="done" />} />)
+    expect(screen.getByTestId("idle")).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button"))
+    await waitFor(() => expect(screen.getByTestId("done")).toBeInTheDocument())
+    expect(screen.queryByTestId("idle")).toBeNull()
+  })
+
+  it("is a non-submitting button, which a caller can override", () => {
+    const { rerender } = render(<CopyButton value="x" />)
+    expect(screen.getByRole("button")).toHaveAttribute("type", "button")
+    rerender(<CopyButton value="x" type="submit" />)
+    expect(screen.getByRole("button")).toHaveAttribute("type", "submit")
+  })
+
   it("returns to idle two seconds after a copy", async () => {
     render(<CopyButton value="x" />)
     const button = screen.getByRole("button", { name: "Copy" })
@@ -78,6 +114,20 @@ describe("CopyButton", () => {
     await waitFor(() => expect(button).toHaveAttribute("data-copied", "false"), { timeout: 3000 })
     expect(button).toHaveAccessibleName("Copy")
   })
+
+  it("restarts the copied window on a second copy", async () => {
+    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+    render(<CopyButton value="x" />)
+    const button = screen.getByRole("button")
+    fireEvent.click(button)
+    await waitFor(() => expect(button).toHaveAttribute("data-copied", "true"))
+
+    await wait(1500)
+    fireEvent.click(button)
+    await waitFor(() => expect(writeText).toHaveBeenCalledTimes(2))
+    await wait(800)
+    expect(button).toHaveAttribute("data-copied", "true")
+  }, 10000)
 
   it("reports a failed copy and stays idle", async () => {
     const error = new Error("denied")
@@ -193,6 +243,25 @@ describe("CopyButton", () => {
     expect(button).toHaveAttribute("data-state", "closed")
   })
 
+  it("shows tooltipLabel, then copiedTooltipLabel after a copy", async () => {
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    )
+    render(<CopyButton value="x" tooltipLabel="Copy code" copiedTooltipLabel="Code copied" />)
+    const button = screen.getByRole("button")
+
+    fireEvent.focus(button)
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("Copy code")
+
+    fireEvent.click(button)
+    await waitFor(() => expect(screen.getByRole("tooltip")).toHaveTextContent("Code copied"))
+  })
+
   it("spreads other props onto the button", () => {
     render(<CopyButton value="x" data-testid="copy" className="extra" disabled />)
     const button = screen.getByTestId("copy")
@@ -232,6 +301,13 @@ describe("CopyableCode", () => {
     await waitFor(() => expect(navigator.clipboard.writeText).toHaveBeenCalledWith("VTECH-1"))
     await waitFor(() => expect(button).toHaveAccessibleName("Code copied"))
     expect(onCopied).toHaveBeenCalledTimes(1)
+  })
+
+  it("wraps a non-span code element in a div", () => {
+    const { container } = render(<CopyableCode code="VTECH-1" as="h1" />)
+    const root = container.firstElementChild as HTMLElement
+    expect(root.tagName).toBe("DIV")
+    expect(root).toHaveAttribute("data-slot", "copyable-code")
   })
 
   it("defaults to a span and hides the button until hover or focus", () => {

@@ -173,13 +173,16 @@ function CopyButton({
   ...props
 }: CopyButtonProps) {
   const [hasCopied, setHasCopied] = React.useState(false)
+  // Each copy restarts the copied window, even while it is already showing.
+  const [copyCount, setCopyCount] = React.useState(0)
   const [burstId, setBurstId] = React.useState(0)
+  const [tooltipOpen, setTooltipOpen] = React.useState(false)
 
   React.useEffect(() => {
-    if (!hasCopied) return
+    if (copyCount === 0) return
     const timeout = setTimeout(() => setHasCopied(false), COPIED_MS)
     return () => clearTimeout(timeout)
-  }, [hasCopied])
+  }, [copyCount])
 
   React.useEffect(() => {
     if (burstId === 0) return
@@ -204,6 +207,7 @@ function CopyButton({
       }
 
       setHasCopied(true)
+      setCopyCount((count) => count + 1)
       if (burst && !prefersReducedMotion()) {
         setBurstId((id) => id + 1)
       }
@@ -219,6 +223,7 @@ function CopyButton({
 
   const button = (
     <Button
+      type="button"
       size={size}
       variant={variant}
       aria-label={hasCopied ? copiedLabel : label}
@@ -249,7 +254,8 @@ function CopyButton({
 
   return (
     <TooltipProvider>
-      <Tooltip>
+      {/* Controlled: the trigger closes the tooltip on click, which would hide the copied label. */}
+      <Tooltip open={tooltipOpen || hasCopied} onOpenChange={setTooltipOpen}>
         <TooltipTrigger asChild>{button}</TooltipTrigger>
         <TooltipContent>{activeTooltip}</TooltipContent>
       </Tooltip>

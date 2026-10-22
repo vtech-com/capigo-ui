@@ -6,6 +6,8 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-22
+
 ### Fixed
 
 - `copy-button`: the status region renders before the button, not after it, so the button stays its
@@ -72,7 +74,8 @@ All notable changes to this registry are recorded here. The format follows
   status. Composes `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu` and
   `tooltip`, plus `lucide-react`.
 
-[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/vtech-com/capigo-ui/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/vtech-com/capigo-ui/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/vtech-com/capigo-ui/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/vtech-com/capigo-ui/compare/v0.2.0...v0.3.0

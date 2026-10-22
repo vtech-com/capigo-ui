@@ -6,6 +6,17 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `tag-input`: `TagChip`, a filled or outlined tag chip with an optional remove button;
+  `TagList`, a read-only line of chips that can end in a "+N" badge; and `TagInput`, chips plus a
+  combobox that offers the tags a row does not carry yet. The name rule (`isValidName`,
+  `normalizeName`, `keyOf`), matching (`searchText`, `foldText`), colours (`chipProps`), labels and
+  test ids are props. `labels.create` adds a create row and a predicted Enter pick;
+  `entryPosition`, `removeLastOnBackspace`, `confirmOnBlur`, `onInvalidChange` and
+  `optionChipSize` cover each product's entry. Composes `badge`, `button`, `input` and `popover`,
+  plus `lucide-react`.
+
 ## [0.4.0] - 2026-10-19
 
 ### Added

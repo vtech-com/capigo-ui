@@ -9,6 +9,7 @@ usable in any shadcn app. MIT licensed.
 | `progress-circle` | A small ring that shows a percentage, for a card or a table cell where a bar would not fit. |
 | `confirmation-dialog` | A confirmation dialog, simple or type-to-confirm, with its buttons on one row at every width. |
 | `copy-button` | A button that copies a value with a short burst, and `CopyableCode`: a code with that button beside it. |
+| `tag-input` | Tags on a row: a chip, a line of chips ending in "+N", and a combobox entry that offers the tags the row does not carry. |
 
 ## Install
 
@@ -35,7 +36,7 @@ npx shadcn@latest add ./capigo-ui/public/r/status-split-pill.json
 
 Each item lands in your `components` alias as `<item>.tsx`. `status-split-pill` installs the
 shadcn primitives it composes: `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu`
-and `tooltip`, plus `lucide-react`. `progress-circle` needs nothing beyond `cn`. `confirmation-dialog` installs `alert-dialog`, `button`, `input` and `label`, plus `lucide-react`. `copy-button` installs `button` and `tooltip`, plus `lucide-react`. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
+and `tooltip`, plus `lucide-react`. `progress-circle` needs nothing beyond `cn`. `confirmation-dialog` installs `alert-dialog`, `button`, `input` and `label`, plus `lucide-react`. `copy-button` installs `button` and `tooltip`, plus `lucide-react`. `tag-input` installs `badge`, `button`, `input` and `popover`, plus `lucide-react`. Releases are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Develop
 
@@ -302,6 +303,126 @@ All text defaults are English; pass translated strings.
 
 `src/copy-button/copy-button-demo.tsx` renders a plain button, one with a tooltip, and a code as a
 page title.
+
+## `tag-input`
+
+Tags on a row, in three exports:
+
+| Export | Use it when |
+|---|---|
+| `TagChip` | One tag: a filled chip the row carries, or an outlined one that reaches it from elsewhere. |
+| `TagList` | A read-only line of chips, optionally ending in a "+N" badge, e.g. in a table cell. |
+| `TagInput` | The row's tags can change: chips plus a combobox that offers the tags the row does not carry. |
+
+`TagInput` never decides which tag a name is. `onAdd` gets the picked tag's name, or the typed text
+composed to NFC and trimmed, and the caller's server resolves it. The name rule is the caller's,
+passed as `isValidName`, so two products with different rules share the entry. A tag is any
+`{ key, name }`; colour is a chip prop, through `chipProps`.
+
+### `TagChip` props
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `name` | `string` | — | The text. |
+| `outlined` | `boolean` | `false` | The `outline` badge instead of `secondary`. |
+| `outlinedPrefix` | `string` | — | Read before the name on an outlined chip, e.g. "From the product:". |
+| `size` | `"sm" \| "md"` | `"md"` | `"sm"` is a 16px chip for dense rows. |
+| `onRemove` | `() => void` | — | Shows a remove button. |
+| `removeLabel` | `string` | — | The remove button's accessible name. Set it with `onRemove`. |
+| `removeProps` | button props | — | Extra attributes on the remove button, such as `data-testid`. |
+
+Every other prop, `className` and `style` included, goes to the `Badge`. A chip with no colour
+class draws neutral.
+
+### `TagList` props
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `tags` | `T[]` | — | The tags, in order. |
+| `max` | `number` | every tag | Chips drawn before a "+N" badge counts the rest. |
+| `size` | `"sm" \| "md"` | `"md"` | Size of the chips and the badge. |
+| `chipProps` | `(tag, index) => TagChipProps` | — | Colour, `outlined`, test id or data attributes per chip. |
+| `overflowLabel` | `(hidden) => string` | — | The badge's accessible name, as a `role="img"`. Absent, a screen reader hears "+N: " and the hidden names. The badge's `title` lists them either way. |
+| `overflowProps` | span props | — | Extra attributes on the badge. |
+
+Every other prop goes to the container, which renders even with no tag.
+
+### `TagInput` props
+
+| Prop | Type | Default | Purpose |
+|---|---|---|---|
+| `value` | `T[]` | — | Tags the row carries, removable. |
+| `inherited` | `T[]` | `[]` | Tags reaching the row from elsewhere: outlined, never removable here. |
+| `options` | `T[]` | — | Tags that may be offered. Carried and inherited ones are left out. |
+| `onAdd` | `(name) => void` | — | A picked tag's name, or the typed text, NFC and trimmed. |
+| `onRemove` | `(key) => void` | — | From a chip's remove button, or Backspace with `removeLastOnBackspace`. |
+| `isValidName` | `(name) => boolean` | — | The name rule. A refused name shows `labels.invalid` and is not added. |
+| `normalizeName` | `(text) => string` | NFC and trim | How the rule composes a name, for matching and the create row. |
+| `keyOf` | `(name) => string` | lower case | The key a composed name maps to, to tell a typed name is a tag already. |
+| `searchText` | `(tag) => string` | its name | The text an option is matched on. |
+| `foldText` | `(text) => string` | accents stripped, lower case, `đ` as `d` | Applied to both sides before matching. |
+| `labels` | see below | — | Every word the entry shows. |
+| `compact` | `boolean` | `false` | Chips plus a small button that opens the entry. |
+| `entryPosition` | `"start" \| "end"` | `"end"` | `"start"` keeps the entry still as chips come and go. |
+| `removeLastOnBackspace` | `boolean` | `false` | Backspace in an empty entry removes the last carried tag. |
+| `confirmOnBlur` | `boolean` | `false` | Leaving the full entry confirms what it holds, for a form that saves on submit. |
+| `onInvalidChange` | `(invalid) => void` | — | Whether the entry holds a refused name, so a form can hold its submit. |
+| `disabled` | `boolean` | `false` | No offer, no remove buttons. |
+| `entryClassName` | `string` | `"h-7 min-w-32 flex-1"` | Replaces the full entry's size classes. |
+| `optionChipSize` | `"sm" \| "md"` | `"md"` | Chip size in the suggestion list. |
+| `chipProps` | `(tag, place) => TagChipProps` | — | Per chip; `place` is `"value"`, `"inherited"` or `"option"`. |
+| `optionProps` | `(tag) => data attributes` | — | Extra attributes on a suggestion row. Each row also carries `data-tag-key`. |
+| `testIds` | slot map | — | `root`, `entry`, `add`, `chip`, `inheritedChip`, `remove`, `option`, `optionChip`, `enterHint`, `create`, `createRule`, `error`. |
+
+`labels` holds `add` (the entry's placeholder and name), `button` (the compact button),
+`suggestions` (the list's name), `remove(name)`, `invalid`, and optionally `inheritedPrefix` and
+`create(name)`.
+
+**`labels.create` changes the offer.** With it, a new valid name gets a "create" row, the row Enter
+picks carries a ↵ mark and follows the pointer, a typed name that matches a tag picks that tag on
+Enter without an arrow, and an invalid name shows the rule before Enter. Without it, Enter picks an
+option only after the arrows reach one; otherwise it adds the typed text.
+
+The entry is a `combobox` whose list is reached through `aria-activedescendant`: arrows move,
+Home and End jump once an option is active, Enter picks, and Escape closes the list, then the
+compact entry. Enter is ignored while an IME is composing.
+
+### A product's tags with a create row
+
+```tsx
+<TagInput
+  value={own}
+  inherited={fromProduct}
+  options={tenantTags}
+  onAdd={stageAdd}
+  onRemove={stageRemove}
+  isValidName={isValidTagName}
+  normalizeName={composeTagName}
+  entryPosition="start"
+  chipProps={(tag, place) => ({ className: colorOf(tag, place === "inherited") })}
+  labels={{
+    add: "Add a tag",
+    button: "Tag",
+    suggestions: "Tags",
+    remove: (name) => `Remove ${name}`,
+    invalid: "Letters, digits, spaces, - and _ only, up to 30.",
+    inheritedPrefix: "From the product:",
+    create: (name) => `Create “${name}”`,
+  }}
+/>
+```
+
+### A table cell
+
+```tsx
+<TagList
+  tags={task.labels}
+  max={3}
+  size="sm"
+  chipProps={(tag) => ({ style: colorStyle(tag) })}
+  overflowLabel={(hidden) => `${hidden.length} more`}
+/>
+```
 
 ## License
 

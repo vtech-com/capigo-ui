@@ -256,10 +256,15 @@ dots in `--primary` and an optional tilted label, about one second long. The bur
 positioned, `pointer-events-none` and `aria-hidden`, so it neither moves the layout nor blocks the
 next click. It is skipped under `prefers-reduced-motion: reduce`.
 
+A visually hidden `role="status"` region (`aria-live="polite"`, `data-slot="copy-button-status"`)
+renders beside the button, empty while idle. It carries `copiedLabel` while the copied state shows,
+so a screen reader announces the copy even when only the focused button's name changes. A failed
+copy announces nothing. The region is absolutely positioned and takes no layout space.
+
 | Prop | Type | Default | Purpose |
 |---|---|---|---|
 | `value` | `string` | — | The text to copy. |
-| `label`, `copiedLabel` | `string` | `"Copy"`, `"Copied"` | The accessible name, idle and for two seconds after a copy. An `aria-label` prop overrides both. |
+| `label`, `copiedLabel` | `string` | `"Copy"`, `"Copied"` | The accessible name, idle and for two seconds after a copy. An `aria-label` prop overrides both names; `copiedLabel` is still announced in the status region. |
 | `burstLabel` | `ReactNode` | none | Text tilted above the button during the burst. Omit for dots only. |
 | `burst` | `boolean` | `true` | `false` turns the burst off. |
 | `onCopied` | `() => void` | — | Runs once after a successful copy. |

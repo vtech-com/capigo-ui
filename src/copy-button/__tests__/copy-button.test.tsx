@@ -62,6 +62,41 @@ describe("CopyButton", () => {
     expect(button).toHaveAccessibleName("Copied")
   })
 
+  it("announces copiedLabel in a polite status region, and clears it when idle", async () => {
+    render(<CopyButton value="x" copiedLabel="Đã sao chép" />)
+    const status = screen.getByRole("status")
+    expect(status).toHaveAttribute("aria-live", "polite")
+    expect(status).toHaveTextContent("")
+
+    fireEvent.click(screen.getByRole("button"))
+    await waitFor(() => expect(status).toHaveTextContent("Đã sao chép"))
+
+    await waitFor(() => expect(status).toHaveTextContent(""), { timeout: 3000 })
+  })
+
+  it("announces the copy even when an aria-label prop fixes the button's name", async () => {
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    )
+    render(<CopyButton value="x" aria-label="Copy the code" tooltipLabel="Copy" />)
+    fireEvent.click(screen.getByRole("button", { name: "Copy the code" }))
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Copied"))
+  })
+
+  it("does not announce a failed copy", async () => {
+    writeText.mockRejectedValue(new Error("denied"))
+    const onCopyError = vi.fn()
+    render(<CopyButton value="x" onCopyError={onCopyError} />)
+    fireEvent.click(screen.getByRole("button"))
+    await waitFor(() => expect(onCopyError).toHaveBeenCalledTimes(1))
+    expect(screen.getByRole("status")).toHaveTextContent("")
+  })
+
   it("names the button from label and copiedLabel, and lets aria-label win", async () => {
     const { rerender } = render(<CopyButton value="x" label="Sao chép" copiedLabel="Đã sao chép" />)
     const button = screen.getByRole("button", { name: "Sao chép" })

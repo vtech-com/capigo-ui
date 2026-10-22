@@ -88,6 +88,24 @@ describe("CopyButton", () => {
     await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("Copied"))
   })
 
+  it("keeps the button its parent's last child, with or without a tooltip", () => {
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    )
+    // ButtonGroup rounds and space-x spaces by :last-child; the status region must not take that slot.
+    const plain = render(<CopyButton value="x" />)
+    expect(plain.container.lastElementChild).toBe(screen.getByRole("button"))
+    plain.unmount()
+
+    const withTooltip = render(<CopyButton value="x" tooltipLabel="Copy" />)
+    expect(withTooltip.container.lastElementChild).toBe(screen.getByRole("button"))
+  })
+
   it("does not announce a failed copy", async () => {
     writeText.mockRejectedValue(new Error("denied"))
     const onCopyError = vi.fn()

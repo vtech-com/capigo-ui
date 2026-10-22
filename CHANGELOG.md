@@ -6,6 +6,12 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- `copy-button`: the status region renders before the button, not after it, so the button stays its
+  parent's last child. In 0.5.0 the region took that slot: a `CopyButton` ending a `ButtonGroup` lost
+  its right corners, and one in a `space-x-*` row gained a trailing margin.
+
 ## [0.5.0] - 2026-10-22
 
 ### Fixed

@@ -7,6 +7,9 @@
  * optional label. The burst is absolutely positioned and ignores the
  * pointer, so it never moves the layout or blocks the next click. Every
  * label is a prop; the caller owns translation and any toast.
+ *
+ * A focused button's changed name is often not read aloud, so a visually
+ * hidden status region beside the button announces `copiedLabel`.
  */
 
 import { Check, Copy } from "lucide-react"
@@ -244,8 +247,20 @@ function CopyButton({
     </Button>
   )
 
+  // Rendered empty from the start: a live region added together with its text is not announced.
+  const status = (
+    <span role="status" aria-live="polite" data-slot="copy-button-status" className="sr-only">
+      {hasCopied ? copiedLabel : ""}
+    </span>
+  )
+
   if (tooltipLabel === undefined && copiedTooltipLabel === undefined) {
-    return button
+    return (
+      <>
+        {button}
+        {status}
+      </>
+    )
   }
 
   const activeTooltip = hasCopied
@@ -259,6 +274,7 @@ function CopyButton({
         <TooltipTrigger asChild>{button}</TooltipTrigger>
         <TooltipContent>{activeTooltip}</TooltipContent>
       </Tooltip>
+      {status}
     </TooltipProvider>
   )
 }

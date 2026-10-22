@@ -6,6 +6,12 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- `copy-button`: a copy is announced to screen readers. A visually hidden `role="status"` region
+  beside the button carries `copiedLabel` for as long as the copied state shows; a failed copy
+  announces nothing. Changing only the focused button's name was often not read aloud.
+
 ### Added
 
 - `tag-input`: `TagChip`, a filled or outlined tag chip with an optional remove button;

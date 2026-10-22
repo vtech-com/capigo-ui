@@ -19,6 +19,7 @@
       "@/components/progress-circle": ["./src/progress-circle/progress-circle.tsx"],
       "@/components/confirmation-dialog": ["./src/confirmation-dialog/confirmation-dialog.tsx"],
       "@/components/copy-button": ["./src/copy-button/copy-button.tsx"],
+      "@/components/tag-input": ["./src/tag-input/tag-input.tsx"],
       "@/*": ["./src/*"]
     }
   },

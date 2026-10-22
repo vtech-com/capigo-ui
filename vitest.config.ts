@@ -13,6 +13,7 @@ export default defineConfig({
       { find: /^@\/components\/progress-circle$/, replacement: src("progress-circle/progress-circle.tsx") },
       { find: /^@\/components\/confirmation-dialog$/, replacement: src("confirmation-dialog/confirmation-dialog.tsx") },
       { find: /^@\/components\/copy-button$/, replacement: src("copy-button/copy-button.tsx") },
+      { find: /^@\/components\/tag-input$/, replacement: src("tag-input/tag-input.tsx") },
       { find: /^@\//, replacement: src("") },
     ],
   },

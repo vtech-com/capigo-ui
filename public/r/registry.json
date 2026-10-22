@@ -77,6 +77,27 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "tag-input",
+      "type": "registry:component",
+      "title": "Tag Input",
+      "description": "Tags on a row: a chip, a line of chips ending in \"+N\", and a combobox entry that offers the tags the row does not carry yet. The name rule, colours, labels and test ids are props; an optional create row offers a new name.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "badge",
+        "button",
+        "input",
+        "popover"
+      ],
+      "files": [
+        {
+          "path": "src/tag-input/tag-input.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

@@ -64,7 +64,8 @@ All notable changes to this registry are recorded here. The format follows
   status. Composes `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu` and
   `tooltip`, plus `lucide-react`.
 
-[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/vtech-com/capigo-ui/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/vtech-com/capigo-ui/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/vtech-com/capigo-ui/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/vtech-com/capigo-ui/compare/v0.1.0...v0.2.0

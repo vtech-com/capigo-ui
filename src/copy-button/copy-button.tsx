@@ -248,6 +248,7 @@ function CopyButton({
   )
 
   // Rendered empty from the start: a live region added together with its text is not announced.
+  // Placed before the button so the button stays a parent's last child (ButtonGroup corners, space-x).
   const status = (
     <span role="status" aria-live="polite" data-slot="copy-button-status" className="sr-only">
       {hasCopied ? copiedLabel : ""}
@@ -257,8 +258,8 @@ function CopyButton({
   if (tooltipLabel === undefined && copiedTooltipLabel === undefined) {
     return (
       <>
-        {button}
         {status}
+        {button}
       </>
     )
   }
@@ -269,12 +270,12 @@ function CopyButton({
 
   return (
     <TooltipProvider>
+      {status}
       {/* Controlled: the trigger closes the tooltip on click, which would hide the copied label. */}
       <Tooltip open={tooltipOpen || hasCopied} onOpenChange={setTooltipOpen}>
         <TooltipTrigger asChild>{button}</TooltipTrigger>
         <TooltipContent>{activeTooltip}</TooltipContent>
       </Tooltip>
-      {status}
     </TooltipProvider>
   )
 }

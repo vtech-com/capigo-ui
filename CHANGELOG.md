@@ -6,6 +6,12 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `status-split-pill`: a menu indicator that changes from `chevrons-up-down` to
+  `chevrons-down-up` while open. Set `showMenuIcon={false}` to hide it; style it
+  through `classNames.menuIcon`. The menu pending spinner takes its place.
+
 ## [0.5.1] - 2026-10-22
 
 ### Fixed

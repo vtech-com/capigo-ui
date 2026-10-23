@@ -11,7 +11,7 @@
  */
 
 import * as React from "react"
-import { ChevronRightIcon, Loader2Icon } from "lucide-react"
+import { ChevronRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, Loader2Icon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import {
@@ -92,6 +92,7 @@ interface StatusSplitPillClassNames {
   trigger?: string
   dot?: string
   label?: string
+  menuIcon?: string
   spinner?: string
   content?: string
   menuLabel?: string
@@ -213,6 +214,8 @@ interface StatusSplitPillProps<T extends string = string>
   menuLabel?: React.ReactNode
   /** Keep the menu open after a pick, e.g. while a pending spinner shows. */
   closeOnSelect?: boolean
+  /** Show the menu indicator beside the status label. */
+  showMenuIcon?: boolean
   /** Button look of both halves; `"plain"` renders unstyled native buttons. */
   variant?: ButtonVariant | "plain"
   size?: ButtonSize
@@ -236,6 +239,7 @@ function StatusSplitPill<T extends string = string>({
   pending = false,
   menuLabel,
   closeOnSelect = true,
+  showMenuIcon = true,
   variant = "outline",
   size = "default",
   grouped = true,
@@ -250,6 +254,8 @@ function StatusSplitPill<T extends string = string>({
   className,
   ...props
 }: StatusSplitPillProps<T>) {
+  const [open, setOpen] = React.useState(false)
+  const MenuIcon = open ? ChevronsDownUpIcon : ChevronsUpDownIcon
   const { choose, dialog } = useStatusConfirm(onSelect)
   const busy = pending !== false
   const quickOption =
@@ -283,7 +289,16 @@ function StatusSplitPill<T extends string = string>({
           {status.label}
         </span>
         {pending === "menu" ? (
-          <Loader2Icon className={cn("animate-spin", classNames?.spinner)} />
+          <Loader2Icon
+            data-icon={showMenuIcon ? "inline-end" : undefined}
+            className={cn(showMenuIcon && "size-4 shrink-0", "animate-spin", classNames?.spinner)}
+          />
+        ) : showMenuIcon ? (
+          <MenuIcon
+            aria-hidden="true"
+            data-icon="inline-end"
+            className={cn("size-4 shrink-0", classNames?.menuIcon)}
+          />
         ) : null}
       </>
     ),
@@ -326,7 +341,7 @@ function StatusSplitPill<T extends string = string>({
     )
 
   const menu = (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent
         align={align}

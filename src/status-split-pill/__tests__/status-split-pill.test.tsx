@@ -11,6 +11,8 @@ import {
 
 vi.mock("lucide-react", () => ({
   ChevronRightIcon: () => <svg data-testid="chevron-icon" />,
+  ChevronsUpDownIcon: (props: React.ComponentProps<"svg">) => <svg data-testid="menu-closed-icon" {...props} />,
+  ChevronsDownUpIcon: (props: React.ComponentProps<"svg">) => <svg data-testid="menu-open-icon" {...props} />,
   Loader2Icon: () => <svg data-testid="spinner-icon" />,
   default: {},
 }))
@@ -47,6 +49,36 @@ function openMenu() {
 }
 
 describe("StatusSplitPill", () => {
+  it("changes the decorative menu icon on pointer opening and Escape dismissal", () => {
+    renderPill()
+    const trigger = screen.getByRole("button", { name: "Draft" })
+    expect(within(trigger).getByTestId("menu-closed-icon")).toHaveAttribute("aria-hidden", "true")
+    expect(trigger).toHaveAttribute("aria-expanded", "false")
+    fireEvent.pointerDown(trigger, { button: 0, ctrlKey: false })
+    expect(within(trigger).getByTestId("menu-open-icon")).toHaveAttribute("aria-hidden", "true")
+    expect(within(trigger).queryByTestId("menu-closed-icon")).toBeNull()
+    expect(trigger).toHaveAttribute("aria-expanded", "true")
+    fireEvent.keyDown(screen.getByTestId("menu"), { key: "Escape" })
+    expect(within(trigger).getByTestId("menu-closed-icon")).toBeInTheDocument()
+    expect(within(trigger).queryByTestId("menu-open-icon")).toBeNull()
+  })
+
+  it("changes the menu icon on keyboard opening and resets it after selection", () => {
+    renderPill()
+    const menu = openMenu()
+    expect(within(screen.getByTestId("trigger")).getByTestId("menu-open-icon")).toBeInTheDocument()
+    fireEvent.click(within(menu).getByTestId("row-submit"))
+    expect(within(screen.getByTestId("trigger")).getByTestId("menu-closed-icon")).toBeInTheDocument()
+  })
+
+  it("hides both menu icons when showMenuIcon is false", () => {
+    renderPill({ showMenuIcon: false })
+    expect(screen.queryByTestId("menu-closed-icon")).toBeNull()
+    openMenu()
+    expect(screen.queryByTestId("menu-open-icon")).toBeNull()
+    expect(screen.getByTestId("chevron-icon")).toBeInTheDocument()
+  })
+
   it("shows the current status as a dot and a label carrying data-status", () => {
     renderPill({ labelProps: { "data-testid": "current" } })
     const label = screen.getByTestId("current")
@@ -149,6 +181,7 @@ describe("StatusSplitPill", () => {
     fireEvent.click(within(openMenu()).getByTestId("row-submit"))
     expect(onSelect).toHaveBeenCalledWith("submit", "menu")
     expect(screen.getByTestId("menu")).toBeInTheDocument()
+    expect(within(screen.getByTestId("trigger")).getByTestId("menu-open-icon")).toBeInTheDocument()
   })
 
   it("drops the label's data-status when labelProps overrides it", () => {
@@ -158,6 +191,8 @@ describe("StatusSplitPill", () => {
 
   it("spins on the trigger when the pending pick came from the menu", () => {
     renderPill({ pending: "menu" })
+    expect(within(screen.getByTestId("trigger")).queryByTestId("menu-closed-icon")).toBeNull()
+    expect(within(screen.getByTestId("trigger")).queryByTestId("menu-open-icon")).toBeNull()
     expect(within(screen.getByTestId("trigger")).getByTestId("spinner-icon")).toBeInTheDocument()
     expect(within(screen.getByTestId("quick")).queryByTestId("spinner-icon")).toBeNull()
   })

@@ -200,6 +200,37 @@ function DisabledReasonTooltip({
   )
 }
 
+function StatusMenuIndicator({
+  open,
+  pending,
+  visible,
+  classNames,
+}: {
+  open: boolean
+  pending: boolean
+  visible: boolean
+  classNames?: StatusSplitPillClassNames
+}) {
+  const iconClassName = visible ? "size-4 shrink-0" : undefined
+  if (pending) {
+    return (
+      <Loader2Icon
+        data-icon={visible ? "inline-end" : undefined}
+        className={cn(iconClassName, "animate-spin", classNames?.spinner)}
+      />
+    )
+  }
+  if (!visible) return null
+  const Icon = open ? ChevronsDownUpIcon : ChevronsUpDownIcon
+  return (
+    <Icon
+      aria-hidden="true"
+      data-icon="inline-end"
+      className={cn(iconClassName, classNames?.menuIcon)}
+    />
+  )
+}
+
 interface StatusSplitPillProps<T extends string = string>
   extends Omit<React.HTMLAttributes<HTMLElement>, "onSelect" | "children"> {
   status: StatusSplitPillStatus
@@ -255,7 +286,6 @@ function StatusSplitPill<T extends string = string>({
   ...props
 }: StatusSplitPillProps<T>) {
   const [open, setOpen] = React.useState(false)
-  const MenuIcon = open ? ChevronsDownUpIcon : ChevronsUpDownIcon
   const { choose, dialog } = useStatusConfirm(onSelect)
   const busy = pending !== false
   const quickOption =
@@ -288,18 +318,12 @@ function StatusSplitPill<T extends string = string>({
         >
           {status.label}
         </span>
-        {pending === "menu" ? (
-          <Loader2Icon
-            data-icon={showMenuIcon ? "inline-end" : undefined}
-            className={cn(showMenuIcon && "size-4 shrink-0", "animate-spin", classNames?.spinner)}
-          />
-        ) : showMenuIcon ? (
-          <MenuIcon
-            aria-hidden="true"
-            data-icon="inline-end"
-            className={cn("size-4 shrink-0", classNames?.menuIcon)}
-          />
-        ) : null}
+        <StatusMenuIndicator
+          open={open}
+          pending={pending === "menu"}
+          visible={showMenuIcon}
+          classNames={classNames}
+        />
       </>
     ),
   })

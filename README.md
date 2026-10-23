@@ -110,12 +110,13 @@ The caller picks the export. The component never decides which transitions exist
 | `pending` | `boolean \| "menu" \| "quick"` | `false` | Disables both halves; `"menu"` or `"quick"` also shows a spinner there. |
 | `menuLabel` | `ReactNode` | — | A heading above the rows. |
 | `closeOnSelect` | `boolean` | `true` | `false` keeps the menu open after a pick. |
+| `showMenuIcon` | `boolean` | `true` | Shows `chevrons-up-down` when closed and `chevrons-down-up` when open. The pending menu spinner replaces it. |
 | `variant` | button variant or `"plain"` | `"outline"` | The look of both halves. `"plain"` renders unstyled native buttons. |
 | `size` | button size | `"default"` | Ignored for `"plain"`. |
 | `grouped` | `boolean` | `true` | Join the halves with `ButtonGroup`, a `role="group"`; `false` renders a plain span with no role. |
 | `align` | `"start" \| "center" \| "end"` | `"start"` | Menu alignment. |
 | `tooltipDelay` | `number` | `0` | Delay of the disabled-reason tooltip. |
-| `classNames` | slot map | — | `trigger`, `dot`, `label`, `spinner`, `content`, `menuLabel`, `item`, `itemDot`, `verb`, `quick`, `quickIcon`, `quickTooltipTrigger`. |
+| `classNames` | slot map | — | `trigger`, `dot`, `label`, `menuIcon`, `spinner`, `content`, `menuLabel`, `item`, `itemDot`, `verb`, `quick`, `quickIcon`, `quickTooltipTrigger`. |
 | `triggerProps`, `labelProps`, `quickProps`, `contentProps` | element props | — | Extra attributes such as `data-testid` or `aria-label`. `labelProps={{ "data-status": undefined }}` drops the label's `data-status`. |
 | `quickIcon` | `ReactNode` | chevron | Replaces the chevron. |
 

@@ -11,7 +11,7 @@
  */
 
 import * as React from "react"
-import { ChevronRightIcon, Loader2Icon } from "lucide-react"
+import { ChevronRightIcon, ChevronsDownUpIcon, ChevronsUpDownIcon, Loader2Icon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import {
@@ -92,6 +92,7 @@ interface StatusSplitPillClassNames {
   trigger?: string
   dot?: string
   label?: string
+  menuIcon?: string
   spinner?: string
   content?: string
   menuLabel?: string
@@ -199,6 +200,37 @@ function DisabledReasonTooltip({
   )
 }
 
+function StatusMenuIndicator({
+  open,
+  pending,
+  visible,
+  classNames,
+}: {
+  open: boolean
+  pending: boolean
+  visible: boolean
+  classNames?: StatusSplitPillClassNames
+}) {
+  const iconClassName = visible ? "size-4 shrink-0" : undefined
+  if (pending) {
+    return (
+      <Loader2Icon
+        data-icon={visible ? "inline-end" : undefined}
+        className={cn(iconClassName, "animate-spin", classNames?.spinner)}
+      />
+    )
+  }
+  if (!visible) return null
+  const Icon = open ? ChevronsDownUpIcon : ChevronsUpDownIcon
+  return (
+    <Icon
+      aria-hidden="true"
+      data-icon="inline-end"
+      className={cn(iconClassName, classNames?.menuIcon)}
+    />
+  )
+}
+
 interface StatusSplitPillProps<T extends string = string>
   extends Omit<React.HTMLAttributes<HTMLElement>, "onSelect" | "children"> {
   status: StatusSplitPillStatus
@@ -213,6 +245,8 @@ interface StatusSplitPillProps<T extends string = string>
   menuLabel?: React.ReactNode
   /** Keep the menu open after a pick, e.g. while a pending spinner shows. */
   closeOnSelect?: boolean
+  /** Show the menu indicator beside the status label. */
+  showMenuIcon?: boolean
   /** Button look of both halves; `"plain"` renders unstyled native buttons. */
   variant?: ButtonVariant | "plain"
   size?: ButtonSize
@@ -236,6 +270,7 @@ function StatusSplitPill<T extends string = string>({
   pending = false,
   menuLabel,
   closeOnSelect = true,
+  showMenuIcon = true,
   variant = "outline",
   size = "default",
   grouped = true,
@@ -250,6 +285,7 @@ function StatusSplitPill<T extends string = string>({
   className,
   ...props
 }: StatusSplitPillProps<T>) {
+  const [open, setOpen] = React.useState(false)
   const { choose, dialog } = useStatusConfirm(onSelect)
   const busy = pending !== false
   const quickOption =
@@ -282,9 +318,12 @@ function StatusSplitPill<T extends string = string>({
         >
           {status.label}
         </span>
-        {pending === "menu" ? (
-          <Loader2Icon className={cn("animate-spin", classNames?.spinner)} />
-        ) : null}
+        <StatusMenuIndicator
+          open={open}
+          pending={pending === "menu"}
+          visible={showMenuIcon}
+          classNames={classNames}
+        />
       </>
     ),
   })
@@ -326,7 +365,7 @@ function StatusSplitPill<T extends string = string>({
     )
 
   const menu = (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent
         align={align}

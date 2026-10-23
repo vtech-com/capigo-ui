@@ -6,6 +6,14 @@ All notable changes to this registry are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-10-23
+
+### Fixed
+
+- `status-split-pill`: make the status menu easier to discover with an indicator that changes from `chevrons-up-down` to
+  `chevrons-down-up` while open. Set `showMenuIcon={false}` to hide it; style it
+  through `classNames.menuIcon`. The menu pending spinner takes its place.
+
 ## [0.5.1] - 2026-10-22
 
 ### Fixed
@@ -74,7 +82,8 @@ All notable changes to this registry are recorded here. The format follows
   status. Composes `alert-dialog`, `badge`, `button`, `button-group`, `dropdown-menu` and
   `tooltip`, plus `lucide-react`.
 
-[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/vtech-com/capigo-ui/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/vtech-com/capigo-ui/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/vtech-com/capigo-ui/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/vtech-com/capigo-ui/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/vtech-com/capigo-ui/compare/v0.3.0...v0.4.0
